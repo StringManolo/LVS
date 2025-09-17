@@ -70,7 +70,7 @@ const parseAudit = (auditJson, rootDir) => {
     }
   }
 
-  return { vulnerabilities, amount };
+  return { vulnerabilities, amount, scanner: 'npm' };
 };
 
 export const scanNpm = async (dir) => {
@@ -109,15 +109,18 @@ export const scanNpm = async (dir) => {
 };
 
 export const printPretty = (scanResults) => {
-  if (!Array.isArray(scanResults)) {
-    console.log('No results to print');
-    return;
-  }
+  if (!Array.isArray(scanResults)) return;
 
   for (const res of scanResults) {
     const root = res?.vulnerabilities?.[0]?.root || res.root || 'N/A';
     console.log(`${colors.bright}${colors.cyan}📂 Root: ${root}${colors.reset}`);
     console.log(`🔹 Vulnerabilities found: ${colors.yellow}${res.amount}${colors.reset}`);
+
+    if (!res.vulnerabilities || res.vulnerabilities.length === 0) {
+      console.log(`${colors.green}No vulnerabilities found.${colors.reset}`);
+      console.log('\n' + '-'.repeat(60) + '\n');
+      continue;
+    }
 
     res.vulnerabilities.forEach((vuln, i) => {
       const score = vuln.score ?? 0;
@@ -132,10 +135,10 @@ export const printPretty = (scanResults) => {
       if (vuln.cwe) {
         if (Array.isArray(vuln.cwe)) {
           cweOut = vuln.cwe
-            .map((c) => `\n      • ${c} - ${cweDescriptions[c] || 'Description not available'}`)
+            .map(c => `\n      • ${c} - ${cweDescriptions[c] || 'Description unavailable'}`)
             .join('');
-        } else if (typeof vuln.cwe === 'string') {
-          cweOut = `\n      • ${vuln.cwe} - ${cweDescriptions[vuln.cwe] || 'Description not available'}`;
+        } else {
+          cweOut = `\n      • ${vuln.cwe} - ${cweDescriptions[vuln.cwe] || 'Description unavailable'}`;
         }
       }
       console.log(`    CWE:${cweOut}`);

@@ -1,0 +1,6 @@
+- Make prettyPrint a module (in /utils/)
+- Test file output of python scan and json output to file
+- Make prettyprint differenciate what internal tool found the vuln
+- Make the scan async
+- Make a std json api to unificate al scans
+- Make prettyPrint output in same pretty format for all scan outputs 
