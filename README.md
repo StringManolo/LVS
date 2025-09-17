@@ -15,7 +15,7 @@ It currently supports auditing **npm packages** and mapping **CWE identifiers** 
 ## Installation
 
 ```bash
-git clone https://github.com/<your-username>/lvs.git
+git clone https://github.com/StringManolo/lvs.git
 cd lvs
 npm install
 npm link  # makes the `lvs` command available globally
